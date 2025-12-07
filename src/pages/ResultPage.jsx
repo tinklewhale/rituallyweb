@@ -80,6 +80,15 @@ const ResultPage = () => {
             >
                 테스트 다시하기
             </button>
+             <button 
+                onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                    alert("결과 링크가 복사되었습니다!");
+                }}
+                className="block w-full text-gray-400 py-3 rounded-xl text-sm font-medium hover:text-gray-600 transition-colors"
+            >
+                결과 공유하기
+            </button>
         </div>
 
       </motion.div>
