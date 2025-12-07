@@ -4,7 +4,13 @@
       "NODE_ENV": "production"
     }
   },
-  "installCommand": "npm ci", 
+  "installCommand": "npm ci",
   "buildCommand": "npm run build",
-  "framework": "vite"
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
