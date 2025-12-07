@@ -1,16 +1,16 @@
 {
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
   "build": {
     "env": {
-      "NODE_ENV": "production"
+      "VITE_BASE": "/"
     }
   },
-  "installCommand": "npm ci",
-  "buildCommand": "npm run build",
-  "framework": "vite",
-  "routes": [
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
