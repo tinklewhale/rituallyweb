@@ -1,83 +1,92 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-
-const results = {
-  A: {
-    title: "민감한 아기피부형",
-    desc: "작은 자극에도 예민하게 반응하는 타입이에요. 순한 성분의 보습 케어가 필요합니다.",
-    productName: "리츄얼리 퓨어 마일드 젤",
-    productUrl: "https://example.com/product/a"
-  },
-  B: {
-    title: "상쾌한 밸런스형",
-    desc: "활동량이 많고 산뜻함을 선호하는 타입이에요. pH 밸런스를 맞춰주는 케어가 딱이에요.",
-    productName: "리츄얼리 프레쉬 밸런싱 폼",
-    productUrl: "https://example.com/product/b"
-  },
-  C: {
-    title: "집중 케어 필요형",
-    desc: "특정 시기에 불편함이 커지는 타입이에요. 진정과 영양 공급이 중요합니다.",
-    productName: "리츄얼리 인텐시브 카밍 세럼",
-    productUrl: "https://example.com/product/c"
-  },
-  D: {
-    title: "데일리 루틴형",
-    desc: "지금도 건강하지만 꾸준한 관리를 원하는 타입이에요. 매일 써도 부담 없는 데일리 케어를 추천해요.",
-    productName: "리츄얼리 에브리데이 워시",
-    productUrl: "https://example.com/product/d"
-  }
-};
+import { results } from '../data/results';
 
 const ResultPage = () => {
     const [searchParams] = useSearchParams();
-    const type = searchParams.get('type') || 'D'; // Default to D if missing
+    const type = searchParams.get('type') || 'CLEAN'; // Default fallback
     const navigate = useNavigate();
     
-    const result = results[type];
+    // Ensure valid type, default to CLEAN if invalid
+    const result = results[type] || results['CLEAN'];
+
+    // Specific styling based on type could be added here
+    // For now using the 'color' prop from data
 
   return (
-    <div className="min-h-screen bg-[#FFFAF0] flex flex-col items-center justify-center p-4">
+    <div className={`min-h-screen ${result.color.split(' ')[0]} flex flex-col items-center justify-center p-4 py-12`}>
       <motion.div 
-        initial={{ opacity: 0, scale: 0.9 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         duration={{ duration: 0.6 }}
         className="max-w-md w-full bg-white rounded-3xl p-8 shadow-xl text-center"
       >
-        <span className="inline-block bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm font-semibold mb-4">
-            나의 Y존 타입은?
+        <span className={`inline-block ${result.color} px-4 py-1.5 rounded-full text-sm font-bold mb-6 tracking-wide`}>
+            MY Y-ZONE TYPE
         </span>
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">{result.title}</h1>
-        <p className="text-gray-600 mb-8 leading-relaxed">
-            {result.desc}
-        </p>
         
-        <div className="bg-gray-50 rounded-xl p-6 mb-8 border border-gray-100">
-            <p className="text-sm text-gray-500 mb-2">추천 아이템</p>
-            <h3 className="text-xl font-bold text-gray-800 mb-4">{result.productName}</h3>
-            {/* Image placeholder */}
-            <div className="w-full h-40 bg-gray-200 rounded-lg mb-4 flex items-center justify-center text-gray-400">
-                Product Image
-            </div>
-            
-            <a 
-                href={result.productUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors"
-            >
-                제품 보러가기
-            </a>
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2 leading-tight">
+            {result.title}
+        </h1>
+        <p className="text-gray-500 font-medium mb-6 text-sm md:text-base">
+            "{result.subtitle}"
+        </p>
+
+        <div className="text-left bg-gray-50 rounded-2xl p-6 mb-8 border border-gray-100">
+            <h3 className="text-sm font-bold text-gray-700 mb-2">💡 고민 포인트</h3>
+            <p className="text-gray-600 text-sm mb-4 leading-relaxed">
+                {result.worryPoint}
+            </p>
+             <h3 className="text-sm font-bold text-gray-700 mb-2">📋 처방 솔루션</h3>
+            <p className="text-gray-600 text-sm leading-relaxed">
+                {result.desc}
+            </p>
         </div>
         
-        <button 
-            onClick={() => navigate('/')}
-            className="text-gray-400 text-sm border-b border-gray-300 hover:text-gray-600 hover:border-gray-500 transition-colors"
-        >
-            테스트 다시하기
-        </button>
+        <div className="mb-10">
+            <div className="flex items-center justify-center mb-4">
+               <span className="h-px w-8 bg-gray-300"></span>
+               <span className="mx-3 text-xs text-gray-400 font-medium tracking-widest">RECOMMEND ROUTINE</span>
+               <span className="h-px w-8 bg-gray-300"></span>
+            </div>
+            
+            <div className="space-y-3">
+                {result.routine.map((item, idx) => (
+                    <div key={idx} className={`p-4 rounded-xl text-left border ${item.includes('Hero') ? 'bg-gray-900 text-white border-gray-900 shadow-lg' : 'bg-white border-gray-200 text-gray-700'}`}>
+                        <div className="flex items-center justify-between">
+                            <span className="font-medium text-sm">{item.replace(' (Hero)', '')}</span>
+                            {item.includes('Hero') && (
+                                <span className="text-[10px] bg-orange-500 text-white px-2 py-0.5 rounded-full font-bold uppercase ml-2">
+                                    Hero
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+        
+        <div className="space-y-3">
+             <button 
+                onClick={() => window.open(result.productUrl, '_blank')}
+                className="block w-full bg-gray-900 text-white py-4 rounded-xl font-bold hover:bg-gray-800 transition-colors shadow-lg"
+            >
+                나만의 리츄얼 시작하기
+            </button>
+            <button 
+                onClick={() => navigate('/')}
+                className="block w-full bg-white text-gray-500 py-4 rounded-xl font-medium border border-gray-200 hover:bg-gray-50 transition-colors"
+            >
+                테스트 다시하기
+            </button>
+        </div>
 
       </motion.div>
+
+      <p className="mt-8 text-gray-400 text-xs font-light">
+          COPYRIGHT © RITUALLY. ALL RIGHTS RESERVED.
+      </p>
     </div>
   );
 };
