@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/hero_bg.jpg';
 import bgImage from '../assets/Y1.jpg';
@@ -6,14 +6,30 @@ import { motion } from 'framer-motion';
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => setImageLoaded(true);
+    img.onerror = () => setImageError(true);
+    img.src = bgImage;
+  }, []);
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center p-4 overflow-hidden">
+        {/* Fallback Background Color */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 z-0" />
+        
         {/* Base Background Image */}
-        <div 
-            className="absolute top-0 left-0 w-full h-full bg-cover bg-center z-0"
-            style={{ backgroundImage: `url(${bgImage})` }}
-        />
+        {!imageError && (
+          <div 
+              className={`absolute top-0 left-0 w-full h-full bg-cover bg-center z-0 transition-opacity duration-1000 ${
+                imageLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+              style={{ backgroundImage: `url(${bgImage})` }}
+          />
+        )}
         
         {/* Animated Gradient Overlay */}
         <motion.div 
